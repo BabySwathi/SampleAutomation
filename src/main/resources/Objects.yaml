@@ -1,0 +1,78 @@
+ObjectRepository:
+  DemoApplicationURL: http://demo.guru99.com/
+  MainPage:
+    InsuranceProject:
+      type: xpath
+      value: //a[contains(text(),'Insurance Project')]
+  RegisterPage:
+    Register:
+      type: xpath
+      value: //a[contains(text(),'Register')]
+    Title:
+      type: xpath
+      value: //*[@id="user_title"]
+    FirstName:
+      type: xpath
+      value: //*[@id='user_firstname']
+    SurName:
+      type: xpath
+      value: //*[@id='user_surname']
+    Phone:
+      type: xpath
+      value: //*[@id='user_phone']
+    Year:
+      type: xpath
+      value: //*[@id='user_dateofbirth_1i']
+    Month:
+      type: xpath
+      value: //*[@id='user_dateofbirth_2i']
+    Date:
+      type: xpath
+      value: //*[@id='user_dateofbirth_3i']
+    licenceType:
+      type: xpath
+      value: //*[@id='licencetype_f']
+    licencePeriod:
+      type: xpath
+      value: //*[@id='user_licenceperiod']
+    occupation:
+      type: xpath
+      value: //*[@id='user_occupation_id']
+    Street:
+      type: xpath
+      value: //*[@id='user_address_attributes_street']
+    city:
+      type: xpath
+      value: //*[@id='user_address_attributes_city']
+    country:
+      type: xpath
+      value: //*[@id='user_address_attributes_county']
+    postCode:
+      type: xpath
+      value: //*[@id='user_address_attributes_postcode']
+    email:
+      type: xpath
+      value: //*[@id='user_user_detail_attributes_email']
+    password:
+      type: xpath
+      value: //*[@id='user_user_detail_attributes_password']
+    ConfirmationPassword:
+      type: xpath
+      value: //*[@id='user_user_detail_attributes_password_confirmation']
+    Create:
+      type: xpath
+      value: //input[@type='submit']
+    emailsignIn:
+      type: xpath
+      value: //*[@id='email']
+    passwordsignIn:
+      type: xpath
+      value: //*[@id='password']
+    Submit:
+      type: xpath
+      value: //input[@type='submit']
+    EmailStaticText:
+      type: xpath
+      value: //div[3]/h4
+
+
