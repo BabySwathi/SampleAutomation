@@ -14,9 +14,12 @@ import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.support.ui.Select;
 import java.io.File;
 import java.io.IOException;
@@ -32,13 +35,16 @@ public class stepdefinition {
     WebDriver driver;
     ExtentTest test;
     ExtentReports report;
+    Scenario scenario;
 
     public stepdefinition(){
 
         report = new ExtentReports(System.getProperty("user.dir")+"\\ExtentReportResults.html");
-        test = report.startTest("stepDefinition");
+        test = report.startTest("test");
 
     }
+
+
 
 
     public JSONObject readYAML() throws IOException, ParseException{
@@ -66,6 +72,38 @@ public class stepdefinition {
         JSONObject repository = readYAML();
         String fieldValue = repository.get(fieldName).toString();
         return fieldValue;
+
+    }
+    public void driverInitialisation() throws IOException, ParseException {
+        String browser = RetrievefieldValue("Browser");
+        String headless = RetrievefieldValue("Headless");
+        if(headless.equalsIgnoreCase("True")){
+            String path = System.getProperty("user.dir");
+            System.setProperty("webdriver.chrome.driver", path + "\\Drivers\\chromedriver.exe");
+            ChromeOptions options = new ChromeOptions();
+            options.addArguments("headless");
+            driver = new ChromeDriver(options);
+
+        }else{
+            if(browser.equalsIgnoreCase("chrome")){
+                System.out.println("Executing Before");
+                String path = System.getProperty("user.dir");
+                System.setProperty("webdriver.chrome.driver", path + "\\Drivers\\chromedriver.exe");
+                driver = new ChromeDriver();
+                driver.manage().window().maximize();
+                driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
+
+            }else if(browser.equalsIgnoreCase("ie")){
+                System.out.println("Executing Before");
+                String path = System.getProperty("user.dir");
+                System.setProperty("webdriver.ie.driver", path + "\\Drivers\\IEDriverServer.exe");
+                driver = new InternetExplorerDriver();
+                driver.manage().window().maximize();
+                driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
+
+            }
+        }
+
 
     }
     public String captureScreen() throws IOException {
@@ -171,21 +209,16 @@ public class stepdefinition {
 
 
     @Given("^User is in Demo application and able to access Insurance project$")
-    public void applicationNavigation() throws IOException {
+    public void applicationNavigation() throws IOException, ParseException {
 
-        System.out.println("Executing Before");
-        String path = System.getProperty("user.dir");
-        System.setProperty("webdriver.chrome.driver", path + "\\Drivers\\chromedriver.exe");
-        driver = new ChromeDriver();
-        driver.manage().window().maximize();
-        driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
+        driverInitialisation();
         navigateToURL("DemoApplicationURL");
         clickObject("MainPage","InsuranceProject");
 
     }
 
     @Then("^User should register by providing all the necessary details and Verify it$")
-    public void user_should_register_by_providing_all_the_necessary_details(DataTable input) throws IOException {
+    public void user_should_register_by_providing_all_the_necessary_details(DataTable input) throws IOException, ParseException {
         List<List<String>> data = input.raw();
         Integer random = (int)Math.random();
         clickObject("RegisterPage","Register");
@@ -213,11 +246,38 @@ public class stepdefinition {
         clickObject("RegisterPage","Submit");
         String actualEmailId = getText("RegisterPage","EmailStaticText");
         Assert.assertEquals(email,actualEmailId);
-        driver.quit();
+        closingbrowser();
+
+    }
+    @Given("^User is in Demo application and able to access NewTours$")
+    public void Navigation_NewsTours() throws IOException, ParseException {
+
+        driverInitialisation();
+        navigateToURL("DemoApplicationURL");
+        clickObject("MainPage","NewTours");
+
+    }
+    @Then("^User should verify the webtable datas$")
+    public void webtablehandling() throws IOException, ParseException {
+        List<String> ExpectedValues = new ArrayList<>();
+        ExpectedValues.add("Home");ExpectedValues.add("Flights");ExpectedValues.add("Hotels");ExpectedValues.add("Car Rentals");ExpectedValues.add("Cruises");ExpectedValues.add("Destinations");ExpectedValues.add("Vacations");
+        WebElement table = findElement("ToursPage","MainMenuTable");
+        List<WebElement> rows = table.findElements(By.tagName("tr"));
+        WebElement column = rows.get(0).findElements(By.tagName("td")).get(1);
+        String actual  = column.findElement(By.tagName("font")).findElement(By.tagName("a")).getText();
+        Assert.assertTrue(ExpectedValues.contains(actual));
+        closingbrowser();
+
+    }
+    
+    public void closingbrowser() throws IOException, ParseException {
+        if(RetrievefieldValue("Headless").equalsIgnoreCase("False")){
+            driver.quit();
+
+        }
         report.endTest(test);
         report.flush();
+
     }
-
-
 
 }

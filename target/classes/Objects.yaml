@@ -1,9 +1,14 @@
 ObjectRepository:
+  Browser: chrome
+  Headless : False
   DemoApplicationURL: http://demo.guru99.com/
   MainPage:
     InsuranceProject:
       type: xpath
       value: //a[contains(text(),'Insurance Project')]
+    NewTours:
+      type: xpath
+      value: //a[contains(text(),'New Tours')]
   RegisterPage:
     Register:
       type: xpath
@@ -74,5 +79,7 @@ ObjectRepository:
     EmailStaticText:
       type: xpath
       value: //div[3]/h4
-
-
+  ToursPage:
+    MainMenuTable:
+      type: xpath
+      value: (//table/tbody/tr/td/table/tbody)[3]
